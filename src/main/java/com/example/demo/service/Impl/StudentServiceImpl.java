@@ -1,34 +1,25 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Student;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
     private final StudentRepository studentRepository;
 
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
     public Student addStudent(Student student) {
-        if (studentRepository.findByEmail(student.getEmail()).isPresent()
-                || studentRepository.findByRollNumber(student.getRollNumber()).isPresent()) {
-            throw new RuntimeException("Student email exists");
-        }
         return studentRepository.save(student);
     }
 
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
-    }
-
-    public Student findById(Long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 }

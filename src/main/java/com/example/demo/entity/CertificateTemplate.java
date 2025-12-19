@@ -1,24 +1,41 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
 @Table(name = "certificate_templates")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class CertificateTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String templateName;
+    private String title;
+    private String description;
 
-    private String backgroundUrl;
-    private String fontStyle;
-    private String signatureName;
+    public CertificateTemplate() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
