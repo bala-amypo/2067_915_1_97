@@ -1,25 +1,9 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.CertificateTemplate;
-import com.example.demo.repository.TemplateRepository;
-import com.example.demo.service.TemplateService;
-import org.springframework.stereotype.Service;
-import java.util.List;
-
 @Service
 public class TemplateServiceImpl implements TemplateService {
 
-    private final TemplateRepository templateRepository;
+    private final CertificateTemplateRepository repository;
 
-    public TemplateServiceImpl(TemplateRepository templateRepository) {
-        this.templateRepository = templateRepository;
-    }
-
-    public CertificateTemplate addTemplate(CertificateTemplate template) {
-        return templateRepository.save(template);
-    }
-
-    public List<CertificateTemplate> getAllTemplates() {
-        return templateRepository.findAll();
+    public TemplateServiceImpl(CertificateTemplateRepository repository) {
+        this.repository = repository;
     }
 }
