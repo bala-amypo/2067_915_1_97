@@ -1,29 +1,40 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.VerificationService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Service
-@RequiredArgsConstructor
 public class VerificationServiceImpl implements VerificationService {
 
-    private final CertificateRepository certRepo;
-    private final VerificationLogRepository logRepo;
+    private final VerificationLogRepository logRepository;
+    private final CertificateRepository certificateRepository;
 
-    public VerificationLog verifyCertificate(String code, String ip) {
-        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
-
-        VerificationLog log = VerificationLog.builder()
-                .certificate(cert)
-                .verifiedAt(LocalDateTime.now())
-                .status(cert != null ? "SUCCESS" : "FAILED")
-                .ipAddress(ip)
-                .build();
-
-        return logRepo.save(log);
+    public VerificationServiceImpl(
+            VerificationLogRepository logRepository,
+            CertificateRepository certificateRepository) {
+        this.logRepository = logRepository;
+        this.certificateRepository = certificateRepository;
     }
 
-    public List<VerificationLog> getLogsByCertificate(Long certId) {
-        Certificate c = certRepo.findById(certId)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
-        return logRepo.findAll()
-                .stream()
-                .filter(l -> l.getCertificate().equals(c))
-                .toList();
+    public VerificationLog verifyCertificate(String code, String ip) {
+
+        Certificate certificate = certificateRepository.findByVerificationCode(code)
+                .orElseThrow(() -> new RuntimeException("Invalid certificate"));
+
+        VerificationLog log = new VerificationLog();
+        log.setCertificate(certificate);
+        log.setIpAddress(ip);
+        log.setVerifiedAt(LocalDateTime.now());
+
+        return logRepository.save(log);
+    }
+
+    public List<VerificationLog> getLogsByCertificate(Long certificateId) {
+        return logRepository.findByCertificateId(certificateId);
     }
 }

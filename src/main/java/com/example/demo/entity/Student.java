@@ -14,7 +14,8 @@ public class Student {
     private String email;
     private String course;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Long getId() {
         return id;
@@ -41,4 +42,10 @@ public class Student {
     }
 
     public String getCourse() {
-        return cour
+        return course;
+    }
+
+    public void setCourse(String course) {
+        this.course = course;
+    }
+}

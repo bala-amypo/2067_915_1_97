@@ -1,45 +1,53 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.CertificateService;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.UUID;
+
 @Service
-@RequiredArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
 
-    private final StudentRepository studentRepo;
-    private final CertificateTemplateRepository templateRepo;
-    private final CertificateRepository certRepo;
+    private final CertificateRepository certificateRepository;
+    private final StudentRepository studentRepository;
+    private final TemplateRepository templateRepository;
+
+    public CertificateServiceImpl(
+            CertificateRepository certificateRepository,
+            StudentRepository studentRepository,
+            TemplateRepository templateRepository) {
+        this.certificateRepository = certificateRepository;
+        this.studentRepository = studentRepository;
+        this.templateRepository = templateRepository;
+    }
 
     public Certificate generateCertificate(Long studentId, Long templateId) {
 
-        Student student = studentRepo.findById(studentId)
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        CertificateTemplate template = templateRepo.findById(templateId)
+        CertificateTemplate template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
-        String code = "VC-" + UUID.randomUUID();
+        Certificate certificate = new Certificate();
+        certificate.setStudent(student);
+        certificate.setTemplate(template);
+        certificate.setIssuedDate(LocalDate.now());
+        certificate.setVerificationCode(UUID.randomUUID().toString());
 
-        Certificate cert = Certificate.builder()
-                .student(student)
-                .template(template)
-                .issuedDate(LocalDate.now())
-                .verificationCode(code)
-                .qrCodeUrl("data:image/png;base64," + Base64.getEncoder().encodeToString(code.getBytes()))
-                .build();
-
-        return certRepo.save(cert);
+        return certificateRepository.save(certificate);
     }
 
-    public Certificate getCertificate(Long id) {
-        return certRepo.findById(id)
+    public Certificate getCertificate(Long certificateId) {
+        return certificateRepository.findById(certificateId)
                 .orElseThrow(() -> new RuntimeException("Certificate not found"));
     }
 
     public Certificate findByVerificationCode(String code) {
-        return certRepo.findByVerificationCode(code)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
-    }
-
-    public List<Certificate> findByStudentId(Long studentId) {
-        Student s = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        return certRepo.findByStudent(s);
+        return certificateRepository.findByVerificationCode(code)
+                .orElseThrow(() -> new RuntimeException("Invalid verification code"));
     }
 }
