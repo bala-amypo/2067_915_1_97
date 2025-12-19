@@ -3,16 +3,16 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User register(User user) {
@@ -25,8 +25,7 @@ public class UserServiceImpl implements UserService {
             user.setRole("STAFF");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        // Plain password storage (since no crypto dependency)
         return userRepository.save(user);
     }
 
