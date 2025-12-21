@@ -7,7 +7,8 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "certificates")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,11 +19,9 @@ public class Certificate {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "template_id")
     private CertificateTemplate template;
 
     private LocalDate issuedDate;
