@@ -1,62 +1,35 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "certificates")
+@Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Certificate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String verificationCode;
-
-    private LocalDate issuedDate;
-
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
+    @JoinColumn(name = "template_id")
     private CertificateTemplate template;
 
-    public Certificate() {}
+    private LocalDate issuedDate;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(unique = true)
+    private String verificationCode;
 
-    public String getVerificationCode() {
-        return verificationCode;
-    }
-
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
-    }
-
-    public LocalDate getIssuedDate() {
-        return issuedDate;
-    }
-
-    public void setIssuedDate(LocalDate issuedDate) {
-        this.issuedDate = issuedDate;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public CertificateTemplate getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(CertificateTemplate template) {
-        this.template = template;
-    }
+    @Lob
+    private String qrCodeUrl;
 }
