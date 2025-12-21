@@ -1,50 +1,34 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-import com.example.demo.service.CertificateService;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.UUID;
-
 @Service
 public class CertificateServiceImpl implements CertificateService {
 
+    private final CertificateRepository certificateRepo;
     private final StudentRepository studentRepo;
     private final CertificateTemplateRepository templateRepo;
-    private final CertificateRepository certRepo;
 
-    public CertificateServiceImpl(StudentRepository studentRepo,
-                                  CertificateTemplateRepository templateRepo,
-                                  CertificateRepository certRepo) {
+    public CertificateServiceImpl(CertificateRepository certificateRepo,
+                                  StudentRepository studentRepo,
+                                  CertificateTemplateRepository templateRepo) {
+        this.certificateRepo = certificateRepo;
         this.studentRepo = studentRepo;
         this.templateRepo = templateRepo;
-        this.certRepo = certRepo;
     }
 
     @Override
     public Certificate generateCertificate(Long studentId, Long templateId) {
-
         Student student = studentRepo.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         CertificateTemplate template = templateRepo.findById(templateId)
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
-        Certificate certificate = new Certificate();
-        certificate.setStudent(student);
-        certificate.setTemplate(template);
-        certificate.setIssuedDate(LocalDate.now());
-        certificate.setVerificationCode("VC-" + UUID.randomUUID());
-        certificate.setQrCodeUrl("data:image/png;base64," + certificate.getVerificationCode());
+        Certificate c = new Certificate();
+        c.setStudent(student);
+        c.setTemplate(template);
+        c.setIssuedDate(LocalDate.now());
+        c.setVerificationCode("VC-" + UUID.randomUUID());
 
-        return certRepo.save(certificate);
-    }
+        c.setQrCodeUrl("data:image/png;base64,DUMMY");
 
-    @Override
-    public Certificate findByVerificationCode(String code) {
-        return certRepo.findByVerificationCode(code)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
+        return certificateRepo.save(c);
     }
 }

@@ -12,11 +12,9 @@ public class Certificate {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "template_id")
     private CertificateTemplate template;
 
     private LocalDate issuedDate;
@@ -24,59 +22,26 @@ public class Certificate {
     @Column(unique = true)
     private String verificationCode;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(length = 5000)
     private String qrCodeUrl;
 
-    // ✅ No-arg constructor (JPA mandatory)
     public Certificate() {}
 
-    // ===== GETTERS & SETTERS =====
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {
-        return id;
-    }
+    public Student getStudent() { return student; }
+    public void setStudent(Student student) { this.student = student; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public CertificateTemplate getTemplate() { return template; }
+    public void setTemplate(CertificateTemplate template) { this.template = template; }
 
-    public Student getStudent() {
-        return student;
-    }
+    public LocalDate getIssuedDate() { return issuedDate; }
+    public void setIssuedDate(LocalDate issuedDate) { this.issuedDate = issuedDate; }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+    public String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
 
-    public CertificateTemplate getTemplate() {
-        return template;
-    }
-
-    public void setTemplate(CertificateTemplate template) {
-        this.template = template;
-    }
-
-    public LocalDate getIssuedDate() {
-        return issuedDate;
-    }
-
-    public void setIssuedDate(LocalDate issuedDate) {
-        this.issuedDate = issuedDate;
-    }
-
-    public String getVerificationCode() {
-        return verificationCode;
-    }
-
-    public void setVerificationCode(String verificationCode) {
-        this.verificationCode = verificationCode;
-    }
-
-    public String getQrCodeUrl() {
-        return qrCodeUrl;
-    }
-
-    public void setQrCodeUrl(String qrCodeUrl) {
-        this.qrCodeUrl = qrCodeUrl;
-    }
+    public String getQrCodeUrl() { return qrCodeUrl; }
+    public void setQrCodeUrl(String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
 }
