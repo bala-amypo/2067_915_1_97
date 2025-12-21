@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "certificates")
 public class Certificate {
 
     @Id
@@ -11,20 +12,32 @@ public class Certificate {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
+    @JoinColumn(name = "template_id")
     private CertificateTemplate template;
 
     private LocalDate issuedDate;
+
+    @Column(unique = true)
     private String verificationCode;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String qrCodeUrl;
 
-    public Certificate() {
-    }
+    // ✅ No-arg constructor (JPA mandatory)
+    public Certificate() {}
+
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Student getStudent() {
