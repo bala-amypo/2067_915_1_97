@@ -18,9 +18,10 @@ public class Certificate {
 
     private LocalDate issuedDate;
     private String verificationCode;
-    private String qrCodeUrl;   // ⭐ REQUIRED FIELD
+    private String qrCodeUrl;
 
-    public Certificate() {}
+    public Certificate() {
+    }
 
     public Long getId() {
         return id;
@@ -58,9 +59,11 @@ public class Certificate {
         this.verificationCode = verificationCode;
     }
 
-    // ✅ THIS FIXES THE ERROR
     public String getQrCodeUrl() {
         return qrCodeUrl;
     }
 
-    public vo
+    public void setQrCodeUrl(String qrCodeUrl) {
+        this.qrCodeUrl = qrCodeUrl;
+    }
+}
