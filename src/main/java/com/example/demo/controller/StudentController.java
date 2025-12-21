@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,8 +16,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student add(@RequestBody Student student) {
-        return service.addStudent(student);
+    public Student add(@RequestBody Student s) {
+        return service.addStudent(s);
     }
 
     @GetMapping
