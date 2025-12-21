@@ -18,20 +18,49 @@ public class Certificate {
 
     private LocalDate issuedDate;
     private String verificationCode;
+    private String qrCodeUrl;   // ⭐ REQUIRED FIELD
 
     public Certificate() {}
 
-    public Long getId() { return id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Student getStudent() { return student; }
-    public void setStudent(Student student) { this.student = student; }
+    public Student getStudent() {
+        return student;
+    }
 
-    public CertificateTemplate getTemplate() { return template; }
-    public void setTemplate(CertificateTemplate template) { this.template = template; }
+    public void setStudent(Student student) {
+        this.student = student;
+    }
 
-    public LocalDate getIssuedDate() { return issuedDate; }
-    public void setIssuedDate(LocalDate issuedDate) { this.issuedDate = issuedDate; }
+    public CertificateTemplate getTemplate() {
+        return template;
+    }
 
-    public String getVerificationCode() { return verificationCode; }
-    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
-}
+    public void setTemplate(CertificateTemplate template) {
+        this.template = template;
+    }
+
+    public LocalDate getIssuedDate() {
+        return issuedDate;
+    }
+
+    public void setIssuedDate(LocalDate issuedDate) {
+        this.issuedDate = issuedDate;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    // ✅ THIS FIXES THE ERROR
+    public String getQrCodeUrl() {
+        return qrCodeUrl;
+    }
+
+    public vo
