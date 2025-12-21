@@ -1,17 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "certificates")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Certificate {
 
     @Id
@@ -25,10 +17,21 @@ public class Certificate {
     private CertificateTemplate template;
 
     private LocalDate issuedDate;
-
-    @Column(unique = true)
     private String verificationCode;
 
-    @Lob
-    private String qrCodeUrl;
+    public Certificate() {}
+
+    public Long getId() { return id; }
+
+    public Student getStudent() { return student; }
+    public void setStudent(Student student) { this.student = student; }
+
+    public CertificateTemplate getTemplate() { return template; }
+    public void setTemplate(CertificateTemplate template) { this.template = template; }
+
+    public LocalDate getIssuedDate() { return issuedDate; }
+    public void setIssuedDate(LocalDate issuedDate) { this.issuedDate = issuedDate; }
+
+    public String getVerificationCode() { return verificationCode; }
+    public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
 }
