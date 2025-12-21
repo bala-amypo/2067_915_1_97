@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
+import com.example.demo.entity.Certificate;
+import com.example.demo.entity.VerificationLog;
+import com.example.demo.repository.CertificateRepository;
+import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationService;
 import org.springframework.stereotype.Service;
 
@@ -11,30 +13,48 @@ import java.util.List;
 @Service
 public class VerificationServiceImpl implements VerificationService {
 
-    private final VerificationLogRepository logRepository;
     private final CertificateRepository certificateRepository;
+    private final VerificationLogRepository logRepository;
 
-    public VerificationServiceImpl(
-            VerificationLogRepository logRepository,
-            CertificateRepository certificateRepository) {
-        this.logRepository = logRepository;
+    public VerificationServiceImpl(CertificateRepository certificateRepository,
+                                   VerificationLogRepository logRepository) {
         this.certificateRepository = certificateRepository;
+        this.logRepository = logRepository;
     }
 
-    public VerificationLog verifyCertificate(String code, String ip) {
+    @Override
+    public VerificationLog verifyCertificate(String verificationCode, String ipAddress) {
 
-        Certificate certificate = certificateRepository.findByVerificationCode(code)
-                .orElseThrow(() -> new RuntimeException("Invalid certificate"));
+        Certificate certificate = certificateRepository
+                .findByVerificationCode(verificationCode)
+                .orElse(null);
 
         VerificationLog log = new VerificationLog();
         log.setCertificate(certificate);
-        log.setIpAddress(ip);
         log.setVerifiedAt(LocalDateTime.now());
+        log.setIpAddress(ipAddress);
+
+        if (certificate != null) {
+            log.setStatus("SUCCESS");
+        } else {
+            log.setStatus("FAILED");
+        }
 
         return logRepository.save(log);
     }
 
+    @Override
     public List<VerificationLog> getLogsByCertificate(Long certificateId) {
-        return logRepository.findByCertificateId(certificateId);
+
+        Certificate certificate = certificateRepository
+                .findById(certificateId)
+                .orElse(null);
+
+        if (certificate == null) {
+            return List.of();
+        }
+
+        // ✅ CORRECT METHOD
+        return logRepository.findByCertificate(certificate);
     }
 }
