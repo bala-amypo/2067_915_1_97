@@ -5,7 +5,7 @@ import com.example.demo.entity.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
-
+@RestController
 public class AuthController {
 
     private final UserService userService;
