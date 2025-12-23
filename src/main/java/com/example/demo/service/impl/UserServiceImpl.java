@@ -3,31 +3,30 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final UserRepository repository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public User register(User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email exists");
-        }
         if (user.getRole() == null) {
-            user.setRole("STAFF");
+            user.setRole("USER");
         }
-        user.setPassword(encoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user.setPassword(encode(user.getPassword()));
+        return repository.save(user);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+        return repository.findByEmail(email).orElse(null);
+    }
+
+    private String encode(String raw) {
+        return raw;
     }
 }
