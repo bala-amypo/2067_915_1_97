@@ -1,42 +1,33 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Certificate;
-import com.example.demo.model.VerificationLog;
-import com.example.demo.repository.CertificateRepository;
-import com.example.demo.repository.VerificationLogRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.VerificationService;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@Service   // ⭐ REQUIRED
 public class VerificationServiceImpl implements VerificationService {
 
-    private final CertificateRepository certificateRepository;
-    private final VerificationLogRepository verificationLogRepository;
+    private final CertificateRepository certRepo;
+    private final VerificationLogRepository logRepo;
 
-    // Constructor injection
-    public VerificationServiceImpl(
-            CertificateRepository certificateRepository,
-            VerificationLogRepository verificationLogRepository) {
-        this.certificateRepository = certificateRepository;
-        this.verificationLogRepository = verificationLogRepository;
+    public VerificationServiceImpl(CertificateRepository certRepo,
+                                   VerificationLogRepository logRepo) {
+        this.certRepo = certRepo;
+        this.logRepo = logRepo;
     }
 
     @Override
-    public VerificationLog verifyCertificate(String verificationCode, String clientIp) {
-
-        Certificate certificate =
-                certificateRepository.findByVerificationCode(verificationCode)
-                        .orElse(null);
+    public VerificationLog verifyCertificate(String code, String ip) {
+        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
 
         VerificationLog log = VerificationLog.builder()
-                .certificate(certificate)
+                .certificate(cert)
                 .verifiedAt(LocalDateTime.now())
-                .ipAddress(clientIp)
-                .status(certificate != null ? "SUCCESS" : "FAILED")
+                .status(cert != null ? "SUCCESS" : "FAILED")
+                .ipAddress(ip)
                 .build();
 
-        return verificationLogRepository.save(log);
+        return logRepo.save(log);
     }
 }
