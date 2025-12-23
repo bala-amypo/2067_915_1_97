@@ -1,27 +1,28 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@Table(name = "students",
-       uniqueConstraints = {
-           @UniqueConstraint(columnNames = "email"),
-           @UniqueConstraint(columnNames = "rollNumber")
-       })
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private String name;
-
     private String email;
-
     private String rollNumber;
+
+    public Student() {}
+
+    public Student(String name, String email, String rollNumber) {
+        this.name = name;
+        this.email = email;
+        this.rollNumber = rollNumber;
+    }
+
+    public Long getId() { return id; }
+    public String getName() { return name; }
+    public String getEmail() { return email; }
+    public String getRollNumber() { return rollNumber; }
 }
