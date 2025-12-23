@@ -4,7 +4,7 @@ import com.example.demo.entity.CertificateTemplate;
 import com.example.demo.service.TemplateService;
 
 import java.util.List;
-
+@RestController
 public class TemplateController {
 
     private final TemplateService service;

@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.VerificationLog;
 import com.example.demo.service.VerificationService;
-
+@RestController
 public class VerificationController {
 
     private final VerificationService service;

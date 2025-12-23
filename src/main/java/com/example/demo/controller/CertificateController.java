@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Certificate;
 import com.example.demo.service.CertificateService;
-
+@RestController
 public class CertificateController {
 
     private final CertificateService service;
