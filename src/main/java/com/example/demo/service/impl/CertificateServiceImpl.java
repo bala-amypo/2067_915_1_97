@@ -5,7 +5,7 @@ import com.example.demo.repository.*;
 import com.example.demo.service.CertificateService;
 
 import java.util.*;
-
+@Service
 public class CertificateServiceImpl implements CertificateService {
 
     private final CertificateRepository certRepo;

@@ -7,7 +7,7 @@ import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationService;
 
 import java.time.LocalDateTime;
-
+@Service
 public class VerificationServiceImpl implements VerificationService {
 
     private final CertificateRepository certRepo;

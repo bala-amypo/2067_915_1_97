@@ -5,7 +5,7 @@ import com.example.demo.repository.CertificateTemplateRepository;
 import com.example.demo.service.TemplateService;
 
 import java.util.List;
-
+@Service
 public class TemplateServiceImpl implements TemplateService {
 
     private final CertificateTemplateRepository repo;
