@@ -1,14 +1,24 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 import java.time.LocalDateTime;
 
 @Entity
 public class VerificationLog {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "certificate_id")
+    private Certificate certificate;
 
     private String verificationCode;
     private String ipAddress;
@@ -16,14 +26,33 @@ public class VerificationLog {
 
     public VerificationLog() {}
 
-    public VerificationLog(String verificationCode, String ipAddress, LocalDateTime verifiedAt) {
+    public VerificationLog(Certificate certificate,
+                           String verificationCode,
+                           String ipAddress,
+                           LocalDateTime verifiedAt) {
+        this.certificate = certificate;
         this.verificationCode = verificationCode;
         this.ipAddress = ipAddress;
         this.verifiedAt = verifiedAt;
     }
 
-    public Long getId() { return id; }
-    public String getVerificationCode() { return verificationCode; }
-    public String getIpAddress() { return ipAddress; }
-    public LocalDateTime getVerifiedAt() { return verifiedAt; }
+    public Long getId() {
+        return id;
+    }
+
+    public Certificate getCertificate() {
+        return certificate;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public LocalDateTime getVerifiedAt() {
+        return verifiedAt;
+    }
 }
