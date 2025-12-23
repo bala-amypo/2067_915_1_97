@@ -1,12 +1,6 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,38 +15,34 @@ public class VerificationLog {
     private Certificate certificate;
 
     private String verificationCode;
+    private String status;
     private String ipAddress;
     private LocalDateTime verifiedAt;
 
     public VerificationLog() {}
 
-    public VerificationLog(Certificate certificate,
-                           String verificationCode,
-                           String ipAddress,
-                           LocalDateTime verifiedAt) {
+    public VerificationLog(
+            Certificate certificate,
+            String verificationCode,
+            String ipAddress,
+            LocalDateTime verifiedAt
+    ) {
         this.certificate = certificate;
         this.verificationCode = verificationCode;
         this.ipAddress = ipAddress;
         this.verifiedAt = verifiedAt;
+        this.status = (certificate != null) ? "SUCCESS" : "FAILED";
     }
 
-    public Long getId() {
-        return id;
-    }
+    // ---------- getters ----------
+    public Long getId() { return id; }
+    public Certificate getCertificate() { return certificate; }
+    public String getVerificationCode() { return verificationCode; }
+    public String getStatus() { return status; }
+    public String getIpAddress() { return ipAddress; }
+    public LocalDateTime getVerifiedAt() { return verifiedAt; }
 
-    public Certificate getCertificate() {
-        return certificate;
-    }
-
-    public String getVerificationCode() {
-        return verificationCode;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public LocalDateTime getVerifiedAt() {
-        return verifiedAt;
-    }
+    // ---------- setters (REQUIRED BY TESTS) ----------
+    public void setStatus(String status) { this.status = status; }
+    public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
 }
