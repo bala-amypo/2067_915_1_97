@@ -5,8 +5,10 @@ import com.example.demo.entity.VerificationLog;
 import com.example.demo.repository.CertificateRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationService;
+import org.springframework.stereotype.Service;  // ✅ Import added
 
 import java.time.LocalDateTime;
+
 @Service
 public class VerificationServiceImpl implements VerificationService {
 

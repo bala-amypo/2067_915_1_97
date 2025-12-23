@@ -5,6 +5,8 @@ import com.example.demo.repository.CertificateTemplateRepository;
 import com.example.demo.service.TemplateService;
 
 import java.util.List;
+import org.springframework.stereotype.Service;  // ✅ Import added
+
 @Service
 public class TemplateServiceImpl implements TemplateService {
 

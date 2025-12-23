@@ -5,6 +5,8 @@ import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.StudentService;
 
 import java.util.List;
+import org.springframework.stereotype.Service;  // ✅ Import added
+
 @Service
 public class StudentServiceImpl implements StudentService {
 
