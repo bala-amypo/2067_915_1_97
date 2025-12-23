@@ -1,15 +1,23 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.CertificateTemplate;
 import com.example.demo.service.TemplateService;
-import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/templates")
+import java.util.List;
+
 public class TemplateController {
 
-    private final TemplateService templateService;
+    private final TemplateService service;
 
-    public TemplateController(TemplateService templateService) {
-        this.templateService = templateService;
+    public TemplateController(TemplateService service) {
+        this.service = service;
+    }
+
+    public CertificateTemplate add(CertificateTemplate template) {
+        return service.addTemplate(template);
+    }
+
+    public List<CertificateTemplate> list() {
+        return service.getAllTemplates();
     }
 }
