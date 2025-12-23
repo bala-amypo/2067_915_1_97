@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest r) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest r) {
         User user = new User(
                 r.getName(),
                 r.getEmail(),
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest req) {
+    public ResponseEntity<?> login(@RequestBody AuthRequest req) {
         User user = userService.findByEmail(req.getEmail());
         if (user == null) {
             return ResponseEntity.status(401).build();
@@ -50,4 +50,4 @@ public class AuthController {
                 )
         );
     }
-} // <-- make sure this closing brace is present
+}
