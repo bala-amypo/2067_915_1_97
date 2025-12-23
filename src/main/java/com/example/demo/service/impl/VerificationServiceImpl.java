@@ -1,32 +1,14 @@
-package com.example.demo.service.impl;
+@Override
+public VerificationLog verifyCertificate(String code, String ip) {
 
-import com.example.demo.entity.*;
-import com.example.demo.repository.*;
-import com.example.demo.service.VerificationService;
+    Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
 
-import java.time.LocalDateTime;
+    VerificationLog log = new VerificationLog(
+            cert,              // Certificate (can be null)
+            code,              // verificationCode
+            ip,                // ipAddress
+            LocalDateTime.now()
+    );
 
-public class VerificationServiceImpl implements VerificationService {
-
-    private final CertificateRepository certRepo;
-    private final VerificationLogRepository logRepo;
-
-    public VerificationServiceImpl(CertificateRepository certRepo,
-                                   VerificationLogRepository logRepo) {
-        this.certRepo = certRepo;
-        this.logRepo = logRepo;
-    }
-
-    @Override
-    public VerificationLog verifyCertificate(String code, String ip) {
-        certRepo.findByVerificationCode(code).orElse(null);
-
-        VerificationLog log = new VerificationLog(
-                code,
-                ip,
-                LocalDateTime.now()
-        );
-
-        return logRepo.save(log);
-    }
+    return logRepo.save(log);
 }
