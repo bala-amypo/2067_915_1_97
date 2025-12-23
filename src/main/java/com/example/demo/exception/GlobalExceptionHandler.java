@@ -1,38 +1,20 @@
-package com.example.demo.service.impl;
+package com.example.demo.exception;
 
-import com.example.demo.entity.Certificate;
-import com.example.demo.entity.VerificationLog;
-import com.example.demo.repository.CertificateRepository;
-import com.example.demo.repository.VerificationLogRepository;
-import com.example.demo.service.VerificationService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
+@ControllerAdvice
+public class GlobalExceptionHandler {
 
-public class VerificationServiceImpl implements VerificationService {
-
-    private final CertificateRepository certRepo;
-    private final VerificationLogRepository logRepo;
-
-    public VerificationServiceImpl(
-            CertificateRepository certRepo,
-            VerificationLogRepository logRepo
-    ) {
-        this.certRepo = certRepo;
-        this.logRepo = logRepo;
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @Override
-    public VerificationLog verifyCertificate(String code, String ip) {
-
-        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
-
-        VerificationLog log = new VerificationLog(
-                cert,
-                code,
-                ip,
-                LocalDateTime.now()
-        );
-
-        return logRepo.save(log);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception ex) {
+        return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
