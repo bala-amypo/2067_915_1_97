@@ -4,9 +4,7 @@ import com.example.demo.dto.*;
 import com.example.demo.entity.User;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserService;
-import org.springframework.http.*;
-
-import java.util.Map;
+import org.springframework.http.ResponseEntity;
 
 public class AuthController {
 
@@ -19,12 +17,12 @@ public class AuthController {
     }
 
     public ResponseEntity<?> register(RegisterRequest r) {
-        User user = User.builder()
-                .name(r.getName())
-                .email(r.getEmail())
-                .password(r.getPassword())
-                .role(r.getRole())
-                .build();
+        User user = new User(
+                r.getName(),
+                r.getEmail(),
+                r.getPassword(),
+                r.getRole()
+        );
         return ResponseEntity.ok(userService.register(user));
     }
 
@@ -33,10 +31,17 @@ public class AuthController {
         if (user == null) {
             return ResponseEntity.status(401).build();
         }
-        String token = jwtUtil.generateToken(
-                Map.of("userId", user.getId(), "email", user.getEmail(), "role", user.getRole()),
-                user.getEmail()
+
+        // JwtUtil now accepts ONLY email
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return ResponseEntity.ok(
+                new AuthResponse(
+                        token,
+                        user.getId(),
+                        user.getEmail(),
+                        user.getRole()
+                )
         );
-        return ResponseEntity.ok(new AuthResponse(token, user.getId(), user.getEmail(), user.getRole()));
     }
 }

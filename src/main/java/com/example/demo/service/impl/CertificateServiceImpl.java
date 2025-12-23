@@ -4,7 +4,6 @@ import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.CertificateService;
 
-import java.time.LocalDate;
 import java.util.*;
 
 public class CertificateServiceImpl implements CertificateService {
@@ -30,16 +29,17 @@ public class CertificateServiceImpl implements CertificateService {
         CertificateTemplate template = templateRepo.findById(templateId)
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
-        String code = "VC-" + UUID.randomUUID();
+        String verificationCode = "VC-" + UUID.randomUUID();
+        String certificateNumber = "CERT-" + System.currentTimeMillis();
+        String pdfPath = "certificates/" + certificateNumber + ".pdf";
 
-        Certificate cert = Certificate.builder()
-                .student(student)
-                .template(template)
-                .issuedDate(LocalDate.now())
-                .verificationCode(code)
-                .qrCodeUrl("data:image/png;base64," +
-                        Base64.getEncoder().encodeToString(code.getBytes()))
-                .build();
+        Certificate cert = new Certificate(
+                certificateNumber,
+                verificationCode,
+                pdfPath,
+                student,
+                template
+        );
 
         return certRepo.save(cert);
     }

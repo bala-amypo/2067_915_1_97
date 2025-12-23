@@ -19,14 +19,13 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public VerificationLog verifyCertificate(String code, String ip) {
-        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
+        certRepo.findByVerificationCode(code).orElse(null);
 
-        VerificationLog log = VerificationLog.builder()
-                .certificate(cert)
-                .verifiedAt(LocalDateTime.now())
-                .status(cert != null ? "SUCCESS" : "FAILED")
-                .ipAddress(ip)
-                .build();
+        VerificationLog log = new VerificationLog(
+                code,
+                ip,
+                LocalDateTime.now()
+        );
 
         return logRepo.save(log);
     }
