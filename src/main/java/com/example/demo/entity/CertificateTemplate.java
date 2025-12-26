@@ -13,6 +13,7 @@ public class CertificateTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
 
     @Column(name = "template_name", nullable = false, unique = true)
@@ -21,10 +22,10 @@ public class CertificateTemplate {
     @Column(name = "background_url", nullable = false)
     private String backgroundUrl;
 
-    @Column(name = "font_style")
+    @Column(name = "font_style", nullable = false)
     private String fontStyle;
 
-    @Column(name = "signature_name")
+    @Column(name = "signature_name", nullable = false)
     private String signatureName;
 
     // ===== Getters & Setters =====
