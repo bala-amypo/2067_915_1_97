@@ -15,7 +15,5 @@ public class Certificate {
     public void setId(Long id) { this.id = id; }
 
     public String getCertificateCode() { return certificateCode; }
-    public void setCertificateCode(String certificateCode) {
-        this.certificateCode = certificateCode;
-    }
+    public void setCertificateCode(String certificateCode) { this.certificateCode = certificateCode; }
 }

@@ -15,7 +15,5 @@ public class CertificateTemplate {
     public void setId(Long id) { this.id = id; }
 
     public String getTemplateName() { return templateName; }
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
+    public void setTemplateName(String templateName) { this.templateName = templateName; }
 }
