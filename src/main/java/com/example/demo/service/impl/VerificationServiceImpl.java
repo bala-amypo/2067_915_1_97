@@ -5,39 +5,31 @@ import com.example.demo.entity.VerificationLog;
 import com.example.demo.repository.CertificateRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationService;
-import org.springframework.stereotype.Service;  // ✅ Import added
-
+import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class VerificationServiceImpl implements VerificationService {
+    private final CertificateRepository certificateRepository;
+    private final VerificationLogRepository logRepository;
 
-    private final CertificateRepository certRepo;
-    private final VerificationLogRepository logRepo;
-
-    public VerificationServiceImpl(
-            CertificateRepository certRepo,
-            VerificationLogRepository logRepo
-    ) {
-        this.certRepo = certRepo;
-        this.logRepo = logRepo;
+    public VerificationServiceImpl(CertificateRepository cr, VerificationLogRepository lr) {
+        this.certificateRepository = cr;
+        this.logRepository = lr;
     }
 
     @Override
     public VerificationLog verifyCertificate(String code, String ip) {
-
-        // Find certificate by verification code
-        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
-
-        // Create verification log
-        VerificationLog log = new VerificationLog(
-                cert,
-                code,
-                ip,
-                LocalDateTime.now()
-        );
-
-        // Save and return log
-        return logRepo.save(log);
+        Optional<Certificate> cert = certificateRepository.findByVerificationCode(code);
+        
+        VerificationLog log = VerificationLog.builder()
+                .certificate(cert.orElse(null))
+                .verifiedAt(LocalDateTime.now())
+                .ipAddress(ip)
+                .status(cert.isPresent() ? "SUCCESS" : "FAILED")
+                .build();
+        
+        return logRepository.save(log);
     }
 }
