@@ -1,28 +1,21 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDate;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Certificate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Student student;
+    private String certificateCode;
 
-    @ManyToOne
-    private CertificateTemplate template;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    private LocalDate issuedDate;
-    private String qrCodeUrl;
-
-    @Column(unique = true)
-    private String verificationCode;
+    public String getCertificateCode() { return certificateCode; }
+    public void setCertificateCode(String certificateCode) {
+        this.certificateCode = certificateCode;
+    }
 }
