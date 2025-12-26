@@ -4,34 +4,17 @@ import com.example.demo.entity.CertificateTemplate;
 import com.example.demo.repository.CertificateTemplateRepository;
 import com.example.demo.service.TemplateService;
 
-import java.util.List;
-import org.springframework.stereotype.Service;  // ✅ Import added
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class TemplateServiceImpl implements TemplateService {
 
-    private final CertificateTemplateRepository repo;
-
-    public TemplateServiceImpl(CertificateTemplateRepository repo) {
-        this.repo = repo;
-    }
+    @Autowired
+    private CertificateTemplateRepository repository;
 
     @Override
-    public CertificateTemplate addTemplate(CertificateTemplate template) {
-        if (repo.findByTemplateName(template.getTemplateName()).isPresent()) {
-            throw new RuntimeException("Template name exists");
-        }
-        return repo.save(template);
-    }
-
-    @Override
-    public List<CertificateTemplate> getAllTemplates() {
-        return repo.findAll();
-    }
-
-    @Override
-    public CertificateTemplate findById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Template not found"));
+    public CertificateTemplate save(CertificateTemplate template) {
+        return repository.save(template);
     }
 }
