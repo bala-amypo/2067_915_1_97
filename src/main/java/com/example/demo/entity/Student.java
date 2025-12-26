@@ -1,28 +1,15 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
+import lombok.*;
+import javax.persistence.*;
 
-@Entity
+@Entity @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class Student {
-
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String rollNumber;
-
-    public Student() {}
-
-    public Student(String name, String email, String rollNumber) {
-        this.name = name;
-        this.email = email;
-        this.rollNumber = rollNumber;
-    }
-
-    public Long getId() { return id; }
-    public String getName() { return name; }
-    public String getEmail() { return email; }
-    public String getRollNumber() { return rollNumber; }
 }

@@ -3,65 +3,43 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.CertificateService;
-
-import java.util.*;
-import org.springframework.stereotype.Service;  // ✅ Import added
+import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 public class CertificateServiceImpl implements CertificateService {
+    private final CertificateRepository certificateRepository;
+    private final StudentRepository studentRepository;
+    private final CertificateTemplateRepository templateRepository;
 
-    private final CertificateRepository certRepo;
-    private final StudentRepository studentRepo;
-    private final CertificateTemplateRepository templateRepo;
-
-    public CertificateServiceImpl(
-            CertificateRepository certRepo,
-            StudentRepository studentRepo,
-            CertificateTemplateRepository templateRepo) {
-        this.certRepo = certRepo;
-        this.studentRepo = studentRepo;
-        this.templateRepo = templateRepo;
+    public CertificateServiceImpl(CertificateRepository cr, StudentRepository sr, CertificateTemplateRepository tr) {
+        this.certificateRepository = cr;
+        this.studentRepository = sr;
+        this.templateRepository = tr;
     }
 
     @Override
     public Certificate generateCertificate(Long studentId, Long templateId) {
-        Student student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+        Student student = studentRepository.findById(studentId)
+            .orElseThrow(() -> new RuntimeException("Student not found"));
+        CertificateTemplate template = templateRepository.findById(templateId)
+            .orElseThrow(() -> new RuntimeException("Template not found"));
 
-        CertificateTemplate template = templateRepo.findById(templateId)
-                .orElseThrow(() -> new RuntimeException("Template not found"));
+        Certificate certificate = Certificate.builder()
+            .student(student)
+            .template(template)
+            .issuedDate(LocalDate.now())
+            .verificationCode("VC-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase())
+            .qrCodeUrl("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...")
+            .build();
 
-        String verificationCode = "VC-" + UUID.randomUUID();
-        String certificateNumber = "CERT-" + System.currentTimeMillis();
-        String pdfPath = "certificates/" + certificateNumber + ".pdf";
-
-        Certificate cert = new Certificate(
-                certificateNumber,
-                verificationCode,
-                pdfPath,
-                student,
-                template
-        );
-
-        return certRepo.save(cert);
+        return certificateRepository.save(certificate);
     }
 
     @Override
     public Certificate getCertificate(Long id) {
-        return certRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
-    }
-
-    @Override
-    public Certificate findByVerificationCode(String code) {
-        return certRepo.findByVerificationCode(code)
-                .orElseThrow(() -> new RuntimeException("Certificate not found"));
-    }
-
-    @Override
-    public List<Certificate> findByStudentId(Long studentId) {
-        Student student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        return certRepo.findByStudent(student);
+        return certificateRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Certificate not found"));
     }
 }
