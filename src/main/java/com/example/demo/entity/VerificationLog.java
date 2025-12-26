@@ -1,10 +1,14 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*; // Change to jakarta
+import jakarta.persistence.*;
 import lombok.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class VerificationLog {
 
     @Id
@@ -16,34 +20,12 @@ public class VerificationLog {
     private Certificate certificate;
 
     private String verificationCode;
-    private String status;
+    private String status; // Expected values: "SUCCESS" or "FAILED"
     private String ipAddress;
     private LocalDateTime verifiedAt;
 
-    public VerificationLog() {}
-
-    public VerificationLog(
-            Certificate certificate,
-            String verificationCode,
-            String ipAddress,
-            LocalDateTime verifiedAt
-    ) {
-        this.certificate = certificate;
-        this.verificationCode = verificationCode;
-        this.ipAddress = ipAddress;
-        this.verifiedAt = verifiedAt;
-        this.status = (certificate != null) ? "SUCCESS" : "FAILED";
+    // Custom logic for the service layer to determine status
+    public void determineStatus() {
+        this.status = (this.certificate != null) ? "SUCCESS" : "FAILED";
     }
-
-    // ---------- getters ----------
-    public Long getId() { return id; }
-    public Certificate getCertificate() { return certificate; }
-    public String getVerificationCode() { return verificationCode; }
-    public String getStatus() { return status; }
-    public String getIpAddress() { return ipAddress; }
-    public LocalDateTime getVerifiedAt() { return verifiedAt; }
-
-    // ---------- setters (REQUIRED BY TESTS) ----------
-    public void setStatus(String status) { this.status = status; }
-    public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
 }

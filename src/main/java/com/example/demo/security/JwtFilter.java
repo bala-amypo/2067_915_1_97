@@ -1,30 +1,46 @@
-package com.example.demo.entity;
+package com.example.demo.security;
 
-import jakarta.persistence.*; // Required for Spring Boot 3
-import lombok.*;
-import java.time.LocalDate;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
-@Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Certificate {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Component
+public class JwtFilter extends OncePerRequestFilter {
 
-    @ManyToOne
-    private Student student;
+    private final JwtUtil jwtUtil;
 
-    @ManyToOne
-    private CertificateTemplate template;
+    public JwtFilter(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
-    private LocalDate issuedDate;
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        String username = null;
 
-    // Requirement: Must be a Base64 data URL string
-    private String qrCodeUrl;
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            username = jwtUtil.getUsernameFromToken(token);
+        }
 
-    @Column(unique = true)
-    private String verificationCode; // Requirement: Must start with "VC-"
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtUtil.validateToken(token)) {
+                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                        username, null, null);
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
 }
