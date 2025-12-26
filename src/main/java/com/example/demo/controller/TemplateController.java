@@ -1,34 +1,34 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.web.bind.annotation.*;
-
 import com.example.demo.entity.CertificateTemplate;
 import com.example.demo.service.TemplateService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/templates")
+@Tag(name = "Certificate Templates")
 public class TemplateController {
 
-    private final TemplateService templateService;
+    private final TemplateService service;
 
-    public TemplateController(TemplateService templateService) {
-        this.templateService = templateService;
+    public TemplateController(TemplateService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public CertificateTemplate createTemplate(
+    @Operation(summary = "Add certificate template")
+    public CertificateTemplate addTemplate(
             @RequestBody CertificateTemplate template) {
-
-        // IMPORTANT: id must be null
-        template.setId(null);
-
-        return templateService.addTemplate(template);
+        return service.addTemplate(template);
     }
 
     @GetMapping
+    @Operation(summary = "Get all certificate templates")
     public List<CertificateTemplate> getAllTemplates() {
-        return templateService.getAllTemplates();
+        return service.getAllTemplates();
     }
 }
