@@ -19,7 +19,7 @@ public class VerificationLog {
     private Certificate certificate;
 
     private String verificationCode;
-    private String status;
+    private String status; // "SUCCESS" or "FAILED"
     private String ipAddress;
     private LocalDateTime verifiedAt;
 }
