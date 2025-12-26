@@ -1,6 +1,6 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*; // CHANGE THIS FROM javax.persistence.*
+import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 
