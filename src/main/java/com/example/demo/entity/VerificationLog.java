@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.persistence.*; // Change to jakarta
+import lombok.*;
+import java.time.LocalDate;
 
 @Entity
 public class VerificationLog {

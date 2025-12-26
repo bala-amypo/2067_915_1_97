@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*; // Changed from javax to jakarta
+import jakarta.persistence.*; // Change to jakarta
 import lombok.*;
+import java.time.LocalDate;
 
 @Entity @Data @Builder @NoArgsConstructor @AllArgsConstructor
 public class Student {
