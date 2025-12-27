@@ -19,7 +19,7 @@
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
 
-    <!-- ✅ FORCE JAVA 17 -->
+    <!-- Java version for main source -->
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -61,7 +61,7 @@
             <version>0.9.1</version>
         </dependency>
 
-        <!-- Required for Java 17 -->
+        <!-- JAXB for Java 17 -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -75,11 +75,19 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- Lombok (optional, not required by tests) -->
+        <!-- Lombok (main - optional) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- 🔥 Lombok for TESTS (REQUIRED for lombok.var) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Testing -->
@@ -107,13 +115,19 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- ✅ THIS FIXES: illegal reference to restricted type 'var' -->
+            <!-- ✅ FIX: Java 17 for main, Java 8 for tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <release>17</release>
+                    <!-- Main code -->
+                    <source>17</source>
+                    <target>17</target>
+
+                    <!-- Test code (for lombok.var) -->
+                    <testSource>8</testSource>
+                    <testTarget>8</testTarget>
                 </configuration>
             </plugin>
 
