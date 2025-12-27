@@ -19,10 +19,9 @@
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
 
-    <!-- ✅ FORCE JAVA 17 + SKIP TESTS -->
+    <!-- ✅ FORCE JAVA 17 -->
     <properties>
         <java.version>17</java.version>
-        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
@@ -76,14 +75,14 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- Lombok (optional) -->
+        <!-- Lombok (optional, not required by tests) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Testing (will be skipped) -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -108,7 +107,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Compiler -->
+            <!-- ✅ THIS FIXES: illegal reference to restricted type 'var' -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -118,14 +117,18 @@
                 </configuration>
             </plugin>
 
-            <!-- ✅ SKIP TEST COMPILATION & EXECUTION -->
+            <!-- TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-testng</artifactId>
+                        <version>3.2.5</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
         </plugins>
