@@ -82,7 +82,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 🔥 Lombok for TESTS (REQUIRED for lombok.var) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -115,7 +114,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- ✅ FIX: Java 17 for main, Java 8 for tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
