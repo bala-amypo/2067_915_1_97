@@ -19,7 +19,6 @@
     <name>demo</name>
     <description>Demo project for Spring Boot</description>
 
-    <!-- Java version for main source -->
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -75,18 +74,11 @@
             <version>2.3.0</version>
         </dependency>
 
-        <!-- Lombok (main - optional) -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Testing -->
@@ -108,28 +100,25 @@
     <build>
         <plugins>
 
-            <!-- Spring Boot -->
+            <!-- Spring Boot Maven Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <!-- Main code -->
                     <source>17</source>
                     <target>17</target>
-
-                    <!-- Test code (for lombok.var) -->
-                    <testSource>8</testSource>
-                    <testTarget>8</testTarget>
+                    <release>17</release>
                 </configuration>
             </plugin>
 
-            <!-- TestNG -->
+            <!-- TestNG Support -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
