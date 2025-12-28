@@ -2,19 +2,25 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.VerificationLog;
 import com.example.demo.service.VerificationService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/verify")
 public class VerificationController {
 
-    @Autowired
-    private VerificationService service;
+    private final VerificationService verificationService;
 
-    @GetMapping
-    public VerificationLog verify() {
-        return service.verify();
+    public VerificationController(VerificationService verificationService) {
+        this.verificationService = verificationService;
+    }
+
+    @PostMapping("/{verificationCode}")
+    public VerificationLog verify(@PathVariable String verificationCode,
+                                  HttpServletRequest request) {
+
+        String ip = request != null ? request.getRemoteAddr() : "0.0.0.0";
+        return verificationService.verifyCertificate(verificationCode, ip);
     }
 }

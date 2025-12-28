@@ -2,19 +2,31 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Certificate;
 import com.example.demo.service.CertificateService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/certificates")
 public class CertificateController {
 
-    @Autowired
-    private CertificateService service;
+    private final CertificateService certificateService;
 
-    @PostMapping
-    public Certificate create(@RequestBody Certificate certificate) {
-        return service.save(certificate);
+    public CertificateController(CertificateService certificateService) {
+        this.certificateService = certificateService;
+    }
+
+    @PostMapping("/generate/{studentId}/{templateId}")
+    public Certificate generate(@PathVariable Long studentId,
+                                @PathVariable Long templateId) {
+        return certificateService.generateCertificate(studentId, templateId);
+    }
+
+    @GetMapping("/{certificateId}")
+    public Certificate get(@PathVariable Long certificateId) {
+        return certificateService.getCertificate(certificateId);
+    }
+
+    @GetMapping("/verify/code/{verificationCode}")
+    public Certificate verify(@PathVariable String verificationCode) {
+        return certificateService.findByVerificationCode(verificationCode);
     }
 }

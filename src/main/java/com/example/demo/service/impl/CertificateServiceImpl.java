@@ -1,50 +1,74 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Certificate;
+import com.example.demo.entity.CertificateTemplate;
+import com.example.demo.entity.Student;
+import com.example.demo.repository.CertificateRepository;
+import com.example.demo.repository.CertificateTemplateRepository;
+import com.example.demo.repository.StudentRepository;
+import com.example.demo.service.CertificateService;
+
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.List;
+import java.util.UUID;
+
 public class CertificateServiceImpl implements CertificateService {
 
-    private final CertificateRepository certRepo;
-    private final StudentRepository studentRepo;
-    private final CertificateTemplateRepository templateRepo;
+    private final CertificateRepository certificateRepository;
+    private final StudentRepository studentRepository;
+    private final CertificateTemplateRepository templateRepository;
 
-    public CertificateServiceImpl(CertificateRepository c,
-                                  StudentRepository s,
-                                  CertificateTemplateRepository t) {
-        this.certRepo = c;
-        this.studentRepo = s;
-        this.templateRepo = t;
+    public CertificateServiceImpl(CertificateRepository certificateRepository,
+                                  StudentRepository studentRepository,
+                                  CertificateTemplateRepository templateRepository) {
+        this.certificateRepository = certificateRepository;
+        this.studentRepository = studentRepository;
+        this.templateRepository = templateRepository;
     }
 
-    public Certificate generateCertificate(Long sid, Long tid) {
-        Student s = studentRepo.findById(sid)
+    @Override
+    public Certificate generateCertificate(Long studentId, Long templateId) {
+
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        CertificateTemplate t = templateRepo.findById(tid)
+
+        CertificateTemplate template = templateRepository.findById(templateId)
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
-        String code = "VC-" + UUID.randomUUID();
+        String verificationCode = "VC-" + UUID.randomUUID();
+        String qr = "data:image/png;base64," +
+                Base64.getEncoder().encodeToString(verificationCode.getBytes());
 
-        Certificate cert = Certificate.builder()
-                .student(s)
-                .template(t)
+        Certificate certificate = Certificate.builder()
+                .student(student)
+                .template(template)
                 .issuedDate(LocalDate.now())
-                .verificationCode(code)
-                .qrCodeUrl("data:image/png;base64," +
-                        Base64.getEncoder().encodeToString(code.getBytes()))
+                .verificationCode(verificationCode)
+                .qrCodeUrl(qr)
                 .build();
 
-        return certRepo.save(cert);
+        return certificateRepository.save(certificate);
     }
 
-    public Certificate getCertificate(Long id) {
-        return certRepo.findById(id)
+    @Override
+    public Certificate getCertificate(Long certificateId) {
+        return certificateRepository.findById(certificateId)
                 .orElseThrow(() -> new RuntimeException("Certificate not found"));
     }
 
+    @Override
     public Certificate findByVerificationCode(String code) {
-        return certRepo.findByVerificationCode(code)
+        return certificateRepository.findByVerificationCode(code)
                 .orElseThrow(() -> new RuntimeException("Certificate not found"));
     }
 
-    public List<Certificate> findByStudentId(Long sid) {
-        Student s = studentRepo.findById(sid)
+    @Override
+    public List<Certificate> findByStudentId(Long studentId) {
+
+        Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        return certRepo.findByStudent(s);
+
+        return certificateRepository.findByStudent(student);
     }
 }

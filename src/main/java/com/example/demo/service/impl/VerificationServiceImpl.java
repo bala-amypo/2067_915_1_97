@@ -1,23 +1,37 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Certificate;
+import com.example.demo.entity.VerificationLog;
+import com.example.demo.repository.CertificateRepository;
+import com.example.demo.repository.VerificationLogRepository;
+import com.example.demo.service.VerificationService;
+
+import java.time.LocalDateTime;
+
 public class VerificationServiceImpl implements VerificationService {
 
-    private final CertificateRepository certRepo;
-    private final VerificationLogRepository logRepo;
+    private final CertificateRepository certificateRepository;
+    private final VerificationLogRepository logRepository;
 
-    public VerificationServiceImpl(CertificateRepository c, VerificationLogRepository l) {
-        this.certRepo = c;
-        this.logRepo = l;
+    public VerificationServiceImpl(CertificateRepository certificateRepository,
+                                   VerificationLogRepository logRepository) {
+        this.certificateRepository = certificateRepository;
+        this.logRepository = logRepository;
     }
 
-    public VerificationLog verifyCertificate(String code, String ip) {
-        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
+    @Override
+    public VerificationLog verifyCertificate(String verificationCode, String clientIp) {
+
+        Certificate certificate =
+                certificateRepository.findByVerificationCode(verificationCode).orElse(null);
 
         VerificationLog log = VerificationLog.builder()
-                .certificate(cert)
+                .certificate(certificate)
                 .verifiedAt(LocalDateTime.now())
-                .status(cert != null ? "SUCCESS" : "FAILED")
-                .ipAddress(ip)
+                .status(certificate != null ? "SUCCESS" : "FAILED")
+                .ipAddress(clientIp)
                 .build();
 
-        return logRepo.save(log);
+        return logRepository.save(log);
     }
 }
