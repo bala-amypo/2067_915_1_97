@@ -1,39 +1,23 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.CertificateTemplate;
-import com.example.demo.repository.CertificateTemplateRepository;
-import com.example.demo.service.TemplateService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-@Service
 public class TemplateServiceImpl implements TemplateService {
 
-    private final CertificateTemplateRepository repository;
+    private final CertificateTemplateRepository repo;
 
-    public TemplateServiceImpl(CertificateTemplateRepository repository) {
-        this.repository = repository;
+    public TemplateServiceImpl(CertificateTemplateRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public CertificateTemplate addTemplate(CertificateTemplate template) {
-
-        if (repository.findByTemplateName(template.getTemplateName()).isPresent()) {
+    public CertificateTemplate addTemplate(CertificateTemplate t) {
+        if (repo.findByTemplateName(t.getTemplateName()).isPresent()) {
             throw new RuntimeException("Template name exists");
         }
-
-        return repository.save(template);
+        return repo.save(t);
     }
 
-    @Override
     public List<CertificateTemplate> getAllTemplates() {
-        return repository.findAll();
+        return repo.findAll();
     }
 
-    @Override
     public CertificateTemplate findById(Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Template not found"));
+        return repo.findById(id).orElseThrow();
     }
 }
