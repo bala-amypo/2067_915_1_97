@@ -1,22 +1,23 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.VerificationLog;
-import com.example.demo.repository.VerificationLogRepository;
-import com.example.demo.service.VerificationService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-@Service
 public class VerificationServiceImpl implements VerificationService {
 
-    @Autowired
-    private VerificationLogRepository repository;
+    private final CertificateRepository certRepo;
+    private final VerificationLogRepository logRepo;
 
-    @Override
-    public VerificationLog verify() {
-        VerificationLog log = new VerificationLog();
-        log.setStatus("VERIFIED");
-        return repository.save(log);
+    public VerificationServiceImpl(CertificateRepository c, VerificationLogRepository l) {
+        this.certRepo = c;
+        this.logRepo = l;
+    }
+
+    public VerificationLog verifyCertificate(String code, String ip) {
+        Certificate cert = certRepo.findByVerificationCode(code).orElse(null);
+
+        VerificationLog log = VerificationLog.builder()
+                .certificate(cert)
+                .verifiedAt(LocalDateTime.now())
+                .status(cert != null ? "SUCCESS" : "FAILED")
+                .ipAddress(ip)
+                .build();
+
+        return logRepo.save(log);
     }
 }
