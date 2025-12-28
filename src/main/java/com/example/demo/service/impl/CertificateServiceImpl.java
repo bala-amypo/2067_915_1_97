@@ -26,9 +26,10 @@ public class CertificateServiceImpl implements CertificateService {
     private final StudentRepository studentRepository;
     private final CertificateTemplateRepository templateRepository;
 
-    public CertificateServiceImpl(CertificateRepository certificateRepository,
-                                  StudentRepository studentRepository,
-                                  CertificateTemplateRepository templateRepository) {
+    public CertificateServiceImpl(
+            CertificateRepository certificateRepository,
+            StudentRepository studentRepository,
+            CertificateTemplateRepository templateRepository) {
         this.certificateRepository = certificateRepository;
         this.studentRepository = studentRepository;
         this.templateRepository = templateRepository;
@@ -75,8 +76,9 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.findByStudent(student);
     }
 
-    // ✅ Correct ZXing QR generation
     private String generateQrCode(String text) {
         try {
             QRCodeWriter writer = new QRCodeWriter();
-            BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 200_
+            BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 200, 200);
+
+            BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
