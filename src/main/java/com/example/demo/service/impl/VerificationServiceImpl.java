@@ -5,9 +5,11 @@ import com.example.demo.entity.VerificationLog;
 import com.example.demo.repository.CertificateRepository;
 import com.example.demo.repository.VerificationLogRepository;
 import com.example.demo.service.VerificationService;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+@Service
 public class VerificationServiceImpl implements VerificationService {
 
     private final CertificateRepository certificateRepository;
@@ -21,16 +23,15 @@ public class VerificationServiceImpl implements VerificationService {
 
     @Override
     public VerificationLog verifyCertificate(String verificationCode, String clientIp) {
+        VerificationLog log = new VerificationLog();
+        log.setIpAddress(clientIp);
+        log.setVerifiedAt(LocalDateTime.now());
 
-        Certificate certificate =
-                certificateRepository.findByVerificationCode(verificationCode).orElse(null);
-
-        VerificationLog log = VerificationLog.builder()
-                .certificate(certificate)
-                .verifiedAt(LocalDateTime.now())
-                .status(certificate != null ? "SUCCESS" : "FAILED")
-                .ipAddress(clientIp)
-                .build();
+        certificateRepository.findByVerificationCode(verificationCode)
+                .ifPresentOrElse(
+                        c -> log.setStatus("SUCCESS"),
+                        () -> log.setStatus("FAILED")
+                );
 
         return logRepository.save(log);
     }

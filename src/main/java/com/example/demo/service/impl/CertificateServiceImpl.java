@@ -7,12 +7,19 @@ import com.example.demo.repository.CertificateRepository;
 import com.example.demo.repository.CertificateTemplateRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.CertificateService;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class CertificateServiceImpl implements CertificateService {
 
     private final CertificateRepository certificateRepository;
@@ -37,15 +44,13 @@ public class CertificateServiceImpl implements CertificateService {
                 .orElseThrow(() -> new RuntimeException("Template not found"));
 
         String verificationCode = "VC-" + UUID.randomUUID();
-        String qr = "data:image/png;base64," +
-                Base64.getEncoder().encodeToString(verificationCode.getBytes());
+        String qrCodeUrl = generateQrCode(verificationCode);
 
         Certificate certificate = Certificate.builder()
                 .student(student)
                 .template(template)
-                .issuedDate(LocalDate.now())
                 .verificationCode(verificationCode)
-                .qrCodeUrl(qr)
+                .qrCodeUrl(qrCodeUrl)
                 .build();
 
         return certificateRepository.save(certificate);
@@ -65,10 +70,13 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<Certificate> findByStudentId(Long studentId) {
-
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-
         return certificateRepository.findByStudent(student);
     }
-}
+
+    // ✅ Correct ZXing QR generation
+    private String generateQrCode(String text) {
+        try {
+            QRCodeWriter writer = new QRCodeWriter();
+            BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 200_
