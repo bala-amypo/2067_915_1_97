@@ -8,12 +8,11 @@ import com.example.demo.repository.CertificateTemplateRepository;
 import com.example.demo.repository.StudentRepository;
 import com.example.demo.service.CertificateService;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.List;
@@ -81,4 +80,14 @@ public class CertificateServiceImpl implements CertificateService {
             QRCodeWriter writer = new QRCodeWriter();
             BitMatrix matrix = writer.encode(text, BarcodeFormat.QR_CODE, 200, 200);
 
-            BufferedImage image = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(matrix, "PNG", out);
+
+            return "data:image/png;base64," +
+                    Base64.getEncoder().encodeToString(out.toByteArray());
+
+        } catch (Exception e) {
+            throw new RuntimeException("QR generation failed");
+        }
+    }
+}
