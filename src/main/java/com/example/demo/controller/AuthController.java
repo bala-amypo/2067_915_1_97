@@ -73,7 +73,6 @@ public class AuthController {
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException ex) {
-            // REQUIRED: invalid email should return 401, not throw exception
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid credentials");
